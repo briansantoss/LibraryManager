@@ -1,14 +1,14 @@
 import csv
-from project_setup import EXPORTS_DIR
 from db_tools import db_connection
+from project_setup import IMPORTS_DIR
 
 # Definindo o nome do arquivo de exportação
-EXPORT_FILENAME = "books.csv"
+IMPORT_FILENAME = "books.csv"
 
 
 @db_connection
 def import_data(cursor):
-    with open(EXPORTS_DIR / EXPORT_FILENAME, "w", newline="") as export_file:
+    with open(IMPORTS_DIR / IMPORT_FILENAME, "w", newline="") as export_file:
         # Realiza e captura os registros da tabela correspondentes a pesquisa feita (se houverem)
         cursor.execute("SELECT * FROM books")
         query_results = cursor.fetchall()
@@ -18,4 +18,4 @@ def import_data(cursor):
         writer.writerows(query_results)
 
 
-import_data()
+# DESCOMENTE PARA TESTAR import_data()
