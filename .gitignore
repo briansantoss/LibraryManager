@@ -160,6 +160,7 @@ cython_debug/
 # Arquivos de estrutura do projeto criados de forma automática
 backups/
 exports/
+imports/
 data/
 
 # PyCharm
