@@ -8,6 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent
 BACKUPS_DIR = BASE_DIR / "backups"
 DATA_DIR = BASE_DIR / "data"
 EXPORTS_DIR = BASE_DIR / "exports"
+IMPORTS_DIR = BASE_DIR / "imports"
 
 LIBRARY_DB = BASE_DIR / DATA_DIR / "library.db"
 
@@ -42,6 +43,7 @@ def mk_table(cursor):
 def project_setup():
     BACKUPS_DIR.mkdir(exist_ok=True)
     EXPORTS_DIR.mkdir(exist_ok=True)
+    IMPORTS_DIR.mkdir(exist_ok=True)
     DATA_DIR.mkdir(exist_ok=True)
 
     # Criando (caso não exista) o arquivo do banco de dados
