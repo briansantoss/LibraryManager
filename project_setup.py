@@ -18,10 +18,24 @@ def mk_table(cursor):
         CREATE TABLE IF NOT EXISTS books(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             author TEXT NOT NULL,
+            title TEXT NOT NULL,
             publication_year DATE NOT NULL,
             price REAL NOT NULL   
         )
     ''')
+
+
+""" DESCOMENTE PARA TESTAR AS INSERÇÕES
+    cursor.execute('''
+       INSERT INTO books(author, title, publication_year, price)
+       VALUES ('Jeff Kinney', 'Diário de um banana 1', '2008-05-19', 46)
+       ''')
+
+    cursor.execute('''
+        INSERT INTO books(author, title, publication_year, price)
+        VALUES ('Ziraldo', 'O Menino Maluquinho', '2023-12-20', 25.20)
+    ''')
+"""
 
 
 # Definindo a função encarregada de criar toda a estrutura do projeto caso já não exista
