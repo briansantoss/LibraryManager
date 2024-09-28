@@ -10,7 +10,7 @@ def mk_table(cursor):
             title TEXT NOT NULL,
             author TEXT NOT NULL,
             price REAL NOT NULL,   
-            pub_year DATE NOT NULL
+            pub_year TEXT NOT NULL
         )
     ''')
 
