@@ -19,6 +19,25 @@ def add_book(cursor, book):
 
 
 @db_connection
+def show_library(cursor):
+    cursor.execute("SELECT * FROM books")
+
+    if cursor.rowcount == 0:
+        print("No books found.")
+        return
+
+    query_result = cursor.fetchall()
+    for row in query_result:
+        print(f'''
+        Id: {row[0]}
+        Title: {row[1]},
+        Author: {row[2]},
+        Price: {row[3]}
+        Publication Year: {row[4]},
+        ''')
+
+
+@db_connection
 def remove_book(cursor, book_id):
     cursor.execute("DELETE FROM books WHERE id = ?", (book_id,))
 
