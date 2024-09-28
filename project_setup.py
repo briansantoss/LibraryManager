@@ -9,8 +9,8 @@ def mk_table(cursor):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             author TEXT NOT NULL,
-            publication_year DATE NOT NULL,
-            price REAL NOT NULL   
+            price REAL NOT NULL,   
+            pub_year DATE NOT NULL
         )
     ''')
 
