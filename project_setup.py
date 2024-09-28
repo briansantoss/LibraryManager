@@ -1,16 +1,5 @@
-from pathlib import Path
+from constants import *
 from db_tools import db_connection
-
-# Construindo o caminho completo para o diretório base do projeto
-BASE_DIR = Path(__file__).resolve().parent
-
-# Construindo o caminho completo para o resto da estrutura do projeto
-BACKUPS_DIR = BASE_DIR / "backups"
-DATA_DIR = BASE_DIR / "data"
-EXPORTS_DIR = BASE_DIR / "exports"
-IMPORTS_DIR = BASE_DIR / "imports"
-
-LIBRARY_DB = BASE_DIR / DATA_DIR / "library.db"
 
 
 @db_connection
@@ -20,8 +9,8 @@ def mk_table(cursor):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             author TEXT NOT NULL,
-            publication_year DATE NOT NULL,
-            price REAL NOT NULL   
+            price REAL NOT NULL,   
+            pub_year TEXT NOT NULL
         )
     ''')
 
