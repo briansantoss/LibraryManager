@@ -26,18 +26,6 @@ def mk_table(cursor):
     ''')
 
 
-""" DESCOMENTE PARA TESTAR AS INSERÇÕES
-    cursor.execute('''
-       INSERT INTO books(author, title, publication_year, price)
-       VALUES ('Diário de um banana 1', 'Jeff Kinney', '2008-05-19', 46)
-       ''')
-
-    cursor.execute('''
-        INSERT INTO books(author, title, publication_year, price)
-        VALUES ('O Menino Maluquinho', 'Ziraldo', '2023-12-20', 25.20)
-    ''')
-"""
-
 # Definindo a função encarregada de criar toda a estrutura do projeto caso já não exista
 def project_setup():
     BACKUPS_DIR.mkdir(exist_ok=True)
