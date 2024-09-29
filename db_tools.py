@@ -14,6 +14,15 @@ def db_connection(function):
 
 
 @db_connection
+def no_records(cursor):
+    cursor.execute("SELECT COUNT(*) FROM books")
+
+    # Obtendo o número de registros no banco de dados
+    records_num = cursor.fetchone()[0]
+    return True if records_num == 0 else False
+
+
+@db_connection
 def add_book(cursor, book: Book):
     cursor.execute("INSERT INTO books(title, author, pub_year, price) VALUES (?, ?, ?, ?)",
                    (book.title, book.author, book.pub_year, book.price))
@@ -21,11 +30,9 @@ def add_book(cursor, book: Book):
 
 @db_connection
 def show_library(cursor):
-    # Realizando consulta para verificar quantos registros existem atualmente no banco de dados
-    cursor.execute("SELECT COUNT(*) FROM books")
-    records_num = cursor.fetchone()[0]
-    if records_num == 0:
-        print("\nThere are no books")
+    # Realizando consulta para verificar se existe algum registro atualmente no banco de dados
+    if no_records():
+        print("\nThere are no books to display")
         return
 
     cursor.execute("SELECT * FROM books")
