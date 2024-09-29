@@ -14,6 +14,15 @@ def db_connection(function):
 
 
 @db_connection
+def no_records(cursor):
+    cursor.execute("SELECT COUNT(*) FROM books")
+
+    # Obtendo o número de registros no banco de dados
+    records_num = cursor.fetchone()[0]
+    return True if records_num == 0 else False
+
+
+@db_connection
 def add_book(cursor, book: Book):
     cursor.execute("INSERT INTO books(title, author, pub_year, price) VALUES (?, ?, ?, ?)",
                    (book.title, book.author, book.pub_year, book.price))
@@ -21,11 +30,9 @@ def add_book(cursor, book: Book):
 
 @db_connection
 def show_library(cursor):
-    # Realizando consulta para verificar quantos registros existem atualmente no banco de dados
-    cursor.execute("SELECT COUNT(*) FROM books")
-    records_num = cursor.fetchone()[0]
-    if records_num == 0:
-        print("\nThere are no books")
+    # Realizando consulta para verificar se existe algum registro atualmente no banco de dados
+    if no_records():
+        print("\nThere are no books to display")
         return
 
     cursor.execute("SELECT * FROM books")
@@ -34,9 +41,9 @@ def show_library(cursor):
     for record in query_result:
         print(f'''
                 Id: {record[0]}
-                Title: {record[1]},
-                Author: {record[2]},
-                Price: {record[3]},
+                Title: {record[1]}
+                Author: {record[2]}
+                Price: {record[3]}
                 Publication Year: {record[4]}
                 ''')
 
@@ -78,5 +85,5 @@ def filter_book(cursor, author_name: str):
 def db_backup():
     # Estabelece 2 conexões, uma com o banco de dados principal e uma de backup
     with (sqlite3.connect(LIBRARY_DB) as connection,
-          sqlite3.connect(BACKUPS_DIR / f"db_library-{date.today()}.db") as backup):
+          sqlite3.connect(BACKUPS_DIR / f"bk_library_{date.today()}.db") as backup):
         connection.backup(backup)

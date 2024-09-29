@@ -31,15 +31,24 @@ while option_main != 3:
 
                         add_book(Book(title, author, price, pub_year))
                     case 2:
-                        show_library()
+                        if no_records():
+                            print("\nNo book(s) to display")
+                        else:
+                            show_library()
                     case 3:
                         break
                     case 4:
-                        book_id = int(input("\nInsert the id of the book to be removed: "))
-                        remove_book(book_id)
+                        if no_records():
+                            print("\nNo book to remove")
+                        else:
+                            book_id = int(input("\nInsert the id of the book to be removed: "))
+                            remove_book(book_id)
                     case 5:
-                        author_name = input("\nInsert the author name: ")
-                        filter_book(author_name)
+                        if no_records():
+                            print("\nNo book to search for")
+                        else:
+                            author_name = input("\nInsert the author name: ")
+                            filter_book(author_name)
                     case 7:
                         exit(0)
         case 2:
@@ -52,10 +61,17 @@ while option_main != 3:
 
                 match option_admin:
                     case 1:
-                        break
+                        csvfile = input("\nInsert the export file name: ")
+                        export_data(csvfile)
                     case 2:
-                        import_data()
+                        if no_records():
+                            print("\nNo book(s) to import")
+                        else:
+                            import_data()
                     case 3:
-                        db_backup()
+                        if no_records():
+                            print("\nNo book(s) in the system. No need to backup")
+                        else:
+                            db_backup()
                     case 5:
                         exit(0)
