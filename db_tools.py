@@ -85,5 +85,5 @@ def filter_book(cursor, author_name: str):
 def db_backup():
     # Estabelece 2 conexões, uma com o banco de dados principal e uma de backup
     with (sqlite3.connect(LIBRARY_DB) as connection,
-          sqlite3.connect(BACKUPS_DIR / f"db_library-{date.today()}.db") as backup):
+          sqlite3.connect(BACKUPS_DIR / f"bk_library_{date.today()}.db") as backup):
         connection.backup(backup)
