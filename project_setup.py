@@ -18,7 +18,6 @@ def mk_table(cursor):
 # Definindo a função encarregada de criar toda a estrutura do projeto caso já não exista
 def project_setup():
     BACKUPS_DIR.mkdir(exist_ok=True)
-    EXPORTS_DIR.mkdir(exist_ok=True)
     IMPORTS_DIR.mkdir(exist_ok=True)
     DATA_DIR.mkdir(exist_ok=True)
 
