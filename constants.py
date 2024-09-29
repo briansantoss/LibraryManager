@@ -16,21 +16,23 @@ LIBRARY_DB = BASE_DIR / DATA_DIR / "library.db"
 MAIN_MENU = '''
 [1] - Library Options
 [2] - Admin Options
-[3] - Quit System
+[3] - Exit
 '''
 
 LIBRARY_MENU = '''
-[1] - Add book
+[1] - Add a book
 [2] - Display book(s) information(s)
 [3] - Modify book price
-[4] - Remove book
+[4] - Remove a book
 [5] - Filter book(s) by author
 [6] - Go back
+[7] - Exit
 '''
 
 ADMIN_MENU = '''
-[1] - Export CSV data
-[2] - Import CSV data
-[3] - System Backup
+[1] - Export CSV file data
+[2] - Import db data to CSV format
+[3] - Make a database Backup
 [4] - Go back
+[5] - Exit
 '''
