@@ -34,9 +34,9 @@ def show_library(cursor):
     for record in query_result:
         print(f'''
                 Id: {record[0]}
-                Title: {record[1]},
-                Author: {record[2]},
-                Price: {record[3]},
+                Title: {record[1]}
+                Author: {record[2]}
+                Price: {record[3]}
                 Publication Year: {record[4]}
                 ''')
 
