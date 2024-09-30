@@ -15,9 +15,10 @@ def export_data(cursor, export_filename: str):
             VALUES (?, ?, ?, ?)''', file_rows)
 
             if cursor.rowcount == 0:
-                print("\nEntry error: Unbale to add book(s).", "Please check if it have duplicates or if any required information is missing.")
+                print("\nEntry error: Unbale to add book(s).",
+                      "Please check if it have duplicates or if any required information is missing.")
                 return
-            print(f"Successfully exported {cursor.rowcount} book(s).")
+            print(f"\nSuccessfully exported {cursor.rowcount} book(s).")
             db_backup()
     except FileNotFoundError:
         print(f"\nError: No file named {export_filename} found at exports dir")
@@ -33,3 +34,4 @@ def import_data(cursor):
         # Cria o leitor do arquivo CSV e escreve o resultado da consulta nele
         writer = csv.writer(export_file)
         writer.writerows(query_results)
+    print(f"Successfully imported book(s).")
