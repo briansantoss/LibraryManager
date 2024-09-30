@@ -26,8 +26,8 @@ while option_main != 3:
                     case 1:
                         title = input("\nTitle: ")
                         author = input("Author: ")
-                        price = input("Price: ")
-                        pub_year = input("Publication Year: ")
+                        price = float(input("Price: "))
+                        pub_year = int(input("Publication Year: "))
 
                         add_book(Book(title, author, price, pub_year))
                     case 2:
