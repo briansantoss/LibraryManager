@@ -6,11 +6,12 @@ from db_tools import db_connection
 def mk_table(cursor):
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS books(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id INTEGER PRIMARY KEY,
             title TEXT NOT NULL,
             author TEXT NOT NULL,
             price REAL NOT NULL,   
-            pub_year TEXT NOT NULL
+            pub_year INTEGER NOT NULL,
+            UNIQUE(title, author, pub_year)
         )
     ''')
 
