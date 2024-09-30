@@ -37,7 +37,7 @@ while option_main != 3:
                             show_library()
                     case 3:
                         if no_records():
-                            print("\nNo book(s) to display")
+                            print("\nNo book to modify")
                         else:
                             print(UPDATE_MENU)
                             update_book()

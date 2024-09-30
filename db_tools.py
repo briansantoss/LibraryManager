@@ -62,32 +62,31 @@ def update_book(cursor):
 
             cursor.execute("UPDATE books SET price = ? WHERE id = ?", (price, book_id))
 
-            if cursor.rowcount != 0:
-                print("\nThe price has been updated!")
-            else:
+            if cursor.rowcount == 0:
                 print(f"\n id: {book_id} invalid, please try again")
+                return
+            print("\nThe price has been updated!")
+            db_backup()
 
         case 2:
             book_id = int(input("Enter id to update book data: "))
             print("Enter the information below to update your book registration. "
-            "You will be asked for the new name of the book, author, price and year of publication.")
-
+                "You will be asked for the new name of the book, author, price and year of publication.")
 
             title = input("Insert the title: ")
             author = input("Insert the author: ")
             price = float(input("Insert the price: "))
-            year = int(input("Insert the year of publication: "))
+            pub_year = int(input("Insert the year of publication: "))
 
-            cursor.execute("UPDATE books SET title = ? WHERE id = ?", (title, book_id))
+            cursor.execute('''UPDATE books SET 
+            title = ?,  author = ?, price = ?, pub_year = ?
+            WHERE id = ?''', (title, author, price, pub_year, book_id))
 
-            if cursor.rowcount != 0:
-                print("\nSuccess, Updated information!")
-            else:
+            if cursor.rowcount == 0:
                 print(f"\n id: {book_id} invalid, please try again")
-
-            cursor.execute("UPDATE books SET author = ? WHERE id = ?", (author, book_id))
-            cursor.execute("UPDATE books SET price = ? WHERE id = ?", (price, book_id))
-            cursor.execute("UPDATE books SET pub_year = ? WHERE id = ?", (year, book_id))
+                return
+            print("\nSuccess, Updated information!")
+            db_backup()
 
 
 @db_connection
