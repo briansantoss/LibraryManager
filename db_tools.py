@@ -24,8 +24,15 @@ def no_records(cursor):
 
 @db_connection
 def add_book(cursor, book: Book):
-    cursor.execute("INSERT INTO books(title, author, pub_year, price) VALUES (?, ?, ?, ?)",
+    cursor.execute("INSERT OR IGNORE INTO books(title, author, pub_year, price) VALUES (?, ?, ?, ?)",
                    (book.title, book.author, book.pub_year, book.price))
+    # Testando se o livro já não está presente no banco de dados (duplicata)
+    if cursor.rowcount == 0:
+        print("\nEntry error: Unbale to add book. "
+              "Please check if it is a duplicate or if any required information is missing.")
+        return
+    print("\nAdded successfully")
+    db_backup()
 
 
 @db_connection
@@ -57,6 +64,7 @@ def remove_book(cursor, book_id: int):
         print("\nBook not found")
         return
     print(f"\nBook with id {book_id} removed")
+    db_backup()
 
 
 @db_connection
