@@ -35,4 +35,17 @@ ADMIN_MENU = '''
 [3] - Make a database Backup
 [4] - Go back
 [5] - Exit
+<<<<<<< Updated upstream
 '''
+=======
+'''
+
+UPDATE_MENU = '''
++-------------------------------------------+
+|   [1] - Update price                      |
+|   [2] - Update all                        |
+|   [3] - Go back                           |
+|   [4] - Exit                              |
++-------------------------------------------+
+'''
+>>>>>>> Stashed changes
