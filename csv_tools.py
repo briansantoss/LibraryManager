@@ -11,9 +11,11 @@ def export_data(cursor, export_filename: str):
     try:
         with open(EXPORTS_DIR / (export_filename + ".csv"), "r", encoding="utf-8") as csvfile:
             file_rows = csv.reader(csvfile)
-            cursor.executemany("INSERT INTO books(title, author, price, pub_year) VALUES (?, ?, ?, ?)", file_rows)
+            cursor.executemany('''INSERT OR IGNORE INTO books(title, author, price, pub_year) 
+            VALUES (?, ?, ?, ?)''', file_rows)
     except FileNotFoundError:
         print(f"\nError: No file named {export_filename} found at exports dir")
+        return
 
 
 @db_connection
