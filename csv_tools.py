@@ -1,5 +1,5 @@
 import csv
-from db_tools import db_connection
+from db_tools import db_connection, db_backup
 from project_setup import EXPORTS_DIR, IMPORTS_DIR
 
 # Definindo o nome do arquivo de exportação
@@ -13,9 +13,14 @@ def export_data(cursor, export_filename: str):
             file_rows = csv.reader(csvfile)
             cursor.executemany('''INSERT OR IGNORE INTO books(title, author, price, pub_year) 
             VALUES (?, ?, ?, ?)''', file_rows)
+
+            if cursor.rowcount == 0:
+                print("\nEntry error: Unbale to add book(s).", "Please check if it have duplicates or if any required information is missing.")
+                return
+            print(f"Successfully exported {cursor.rowcount} book(s).")
+            db_backup()
     except FileNotFoundError:
         print(f"\nError: No file named {export_filename} found at exports dir")
-        return
 
 
 @db_connection
