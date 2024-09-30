@@ -49,6 +49,48 @@ def show_library(cursor):
 
 
 @db_connection
+def update_book(cursor):
+    option = int(input("Enter a number according to the options: "))
+
+    match option:
+        case 3:
+            return
+
+        case 1:
+            book_id = int(input("Insert the id to update the book price: "))
+            price = float(input("Insert the new price: "))
+
+            cursor.execute("UPDATE books SET price = ? WHERE id = ?", (price, book_id))
+
+            if cursor.rowcount != 0:
+                print("\nThe price has been updated!")
+            else:
+                print(f"\n id: {book_id} invalid, please try again")
+
+        case 2:
+            book_id = int(input("Enter id to update book data: "))
+            print("Enter the information below to update your book registration. "
+            "You will be asked for the new name of the book, author, price and year of publication.")
+
+
+            title = input("Insert the title: ")
+            author = input("Insert the author: ")
+            price = float(input("Insert the price: "))
+            year = int(input("Insert the year of publication: "))
+
+            cursor.execute("UPDATE books SET title = ? WHERE id = ?", (title, book_id))
+
+            if cursor.rowcount != 0:
+                print("\nSuccess, Updated information!")
+            else:
+                print(f"\n id: {book_id} invalid, please try again")
+
+            cursor.execute("UPDATE books SET author = ? WHERE id = ?", (author, book_id))
+            cursor.execute("UPDATE books SET price = ? WHERE id = ?", (price, book_id))
+            cursor.execute("UPDATE books SET pub_year = ? WHERE id = ?", (year, book_id))
+
+
+@db_connection
 def remove_book(cursor, book_id: int):
     cursor.execute("DELETE FROM books WHERE id = ?", (book_id,))
 

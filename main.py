@@ -1,5 +1,5 @@
 from project_setup import project_setup
-from constants import MAIN_MENU, LIBRARY_MENU, ADMIN_MENU
+from constants import MAIN_MENU, LIBRARY_MENU, ADMIN_MENU, UPDATE_MENU
 from db_tools import *
 from csv_tools import *
 from book import Book
@@ -36,7 +36,11 @@ while option_main != 3:
                         else:
                             show_library()
                     case 3:
-                        break
+                        if no_records():
+                            print("\nNo book(s) to display")
+                        else:
+                            print(UPDATE_MENU)
+                            update_book()
                     case 4:
                         if no_records():
                             print("\nNo book to remove")

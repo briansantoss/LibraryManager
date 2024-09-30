@@ -22,7 +22,7 @@ MAIN_MENU = '''
 LIBRARY_MENU = '''
 [1] - Add a book
 [2] - Display book(s) information(s)
-[3] - Modify book price
+[3] - Modify book
 [4] - Remove a book
 [5] - Filter book(s) by author
 [6] - Go back
@@ -35,4 +35,12 @@ ADMIN_MENU = '''
 [3] - Make a database Backup
 [4] - Go back
 [5] - Exit
+'''
+
+UPDATE_MENU = '''
+\n\n\n\n+-------------------------------------------+
+|   [1] - Update price                      |
+|   [2] - Update all                        |
+|   [3] - Go back                           |
++-------------------------------------------+\n
 '''
