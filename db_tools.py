@@ -105,6 +105,8 @@ def update_book(cursor):
 
             print(f"\nSuccess, book with id {book_id} information updated successfully!")
             db_backup()
+        case 4:
+            exit(0)
 
 
 @db_connection
