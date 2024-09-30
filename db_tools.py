@@ -65,18 +65,32 @@ def update_book(cursor):
 
         case 1:
             book_id = int(input("Insert the id to update the book price: "))
+
+            cursor.execute("SELECT COUNT(*) FROM books WHERE id = ?", (book_id,))
+
+            # Testando se existe algum registro com o id passado via argumento
+            matches_num = cursor.fetchone()[0]
+            if matches_num == 0:
+                print(f"\nid: {book_id} invalid, please try again")
+                return
+
             price = float(input("Insert the new price: "))
 
             cursor.execute("UPDATE books SET price = ? WHERE id = ?", (price, book_id))
-
-            if cursor.rowcount == 0:
-                print(f"\n id: {book_id} invalid, please try again")
-                return
             print("\nThe price has been updated!")
             db_backup()
 
         case 2:
             book_id = int(input("Enter id to update book data: "))
+
+            cursor.execute("SELECT COUNT(*) FROM books WHERE id = ?", (book_id,))
+
+            # Testando se existe algum registro com o id passado via argumento
+            matches_num = cursor.fetchone()[0]
+            if matches_num == 0:
+                print(f"\nid: {book_id} invalid, please try again")
+                return
+
             print("Enter the information below to update your book registration. "
                 "You will be asked for the new name of the book, author, price and year of publication.")
 
@@ -89,10 +103,7 @@ def update_book(cursor):
             title = ?,  author = ?, price = ?, pub_year = ?
             WHERE id = ?''', (title, author, price, pub_year, book_id))
 
-            if cursor.rowcount == 0:
-                print(f"\n id: {book_id} invalid, please try again")
-                return
-            print("\nSuccess, Updated information!")
+            print(f"\nSuccess, book with id {book_id} information updated successfully!")
             db_backup()
 
 
