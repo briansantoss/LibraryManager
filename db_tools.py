@@ -7,9 +7,8 @@ from datetime import date
 # Definindo a função que vai estabelecer a conexão com o banco de dados para toda e qualquer operação nele feita
 def db_connection(function):
     def wrapper(*args, **kwargs):
-        with sqlite3.connect(LIBRARY_DB) as connection:
-            cursor = connection.cursor()
-            return function(cursor, *args, **kwargs)
+        with sqlite3.connect(LIBRARY_DB) as conn:
+            return function(conn.cursor(), *args, **kwargs)
     return wrapper
 
 
@@ -32,7 +31,6 @@ def add_book(cursor, book: Book):
               "Please check if it is a duplicate or if any required information is missing.")
         return
     print("\nAdded successfully")
-    db_backup()
 
 
 @db_connection
@@ -58,7 +56,6 @@ def show_library(cursor):
 @db_connection
 def update_book(cursor):
     option = int(input("Enter a number according to the options: "))
-
     match option:
         case 3:
             return
@@ -78,7 +75,6 @@ def update_book(cursor):
 
             cursor.execute("UPDATE books SET price = ? WHERE id = ?", (price, book_id))
             print("\nThe price has been updated!")
-            db_backup()
 
         case 2:
             book_id = int(input("Enter id to update book data: "))
@@ -99,12 +95,11 @@ def update_book(cursor):
             price = float(input("Insert the price: "))
             pub_year = int(input("Insert the year of publication: "))
 
-            cursor.execute('''UPDATE books SET 
+            cursor.execute("""UPDATE books SET 
             title = ?,  author = ?, price = ?, pub_year = ?
-            WHERE id = ?''', (title, author, price, pub_year, book_id))
+            WHERE id = ?""", (title, author, price, pub_year, book_id))
 
             print(f"\nSuccess, book with id {book_id} information updated successfully!")
-            db_backup()
         case 4:
             exit(0)
 
@@ -113,12 +108,11 @@ def update_book(cursor):
 def remove_book(cursor, book_id: int):
     cursor.execute("DELETE FROM books WHERE id = ?", (book_id,))
 
-    # Verificando se houve de fato alguma remoção
+    # Verificando se houve de fato alguma remoção através da capuração de linhas afetadas
     if cursor.rowcount == 0:
         print("\nBook not found")
         return
     print(f"\nBook with id {book_id} removed")
-    db_backup()
 
 
 @db_connection

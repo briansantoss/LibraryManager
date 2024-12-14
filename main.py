@@ -30,6 +30,7 @@ while option_main != 3:
                         pub_year = int(input("Publication Year: "))
 
                         add_book(Book(title, author, price, pub_year))
+                        db_backup()
                     case 2:
                         if no_records():
                             print("\nNo book(s) to display")
@@ -41,12 +42,14 @@ while option_main != 3:
                         else:
                             print(UPDATE_MENU)
                             update_book()
+                            db_backup()
                     case 4:
                         if no_records():
                             print("\nNo book to remove")
                         else:
                             book_id = int(input("\nInsert the id of the book to be removed: "))
                             remove_book(book_id)
+                            db_backup()
                     case 5:
                         if no_records():
                             print("\nNo book to search for")
@@ -65,13 +68,14 @@ while option_main != 3:
 
                 match option_admin:
                     case 1:
-                        csvfile = input("\nInsert the export file name: ")
-                        export_data(csvfile)
-                    case 2:
                         if no_records():
-                            print("\nNo book(s) to import")
+                            print("\nNo book(s) to export")
                         else:
-                            import_data()
+                            export_data()
+                        
+                    case 2:
+                        csvfile = input("\nInsert the import file name: ")
+                        import_data(csvfile)
                     case 3:
                         if no_records():
                             print("\nNo book(s) in the system. No need to backup")

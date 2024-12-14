@@ -9,17 +9,27 @@ DATA_DIR = BASE_DIR / "data"
 EXPORTS_DIR = BASE_DIR / "exports"
 IMPORTS_DIR = BASE_DIR / "imports"
 
+NEEDED_DIRS = [
+    BACKUPS_DIR,
+    DATA_DIR,
+    EXPORTS_DIR,
+    IMPORTS_DIR
+]
+
+IMPORT_TESTFILE = IMPORTS_DIR / "test.csv"
+
 # Construindo o caminho completo para o arquivo do banco de dados
 LIBRARY_DB = BASE_DIR / DATA_DIR / "library.db"
+EXPORT_FILEPATH = EXPORTS_DIR / "books.csv"
 
 # Definindo as opções/strings de cada um dos menus
-MAIN_MENU = '''
+MAIN_MENU = """
 [1] - Library Options
 [2] - Admin Options
 [3] - Exit
-'''
+"""
 
-LIBRARY_MENU = '''
+LIBRARY_MENU = """
 [1] - Add a book
 [2] - Display book(s) information(s)
 [3] - Modify book
@@ -27,21 +37,21 @@ LIBRARY_MENU = '''
 [5] - Filter book(s) by author
 [6] - Go back
 [7] - Exit
-'''
+"""
 
-ADMIN_MENU = '''
+ADMIN_MENU = """
 [1] - Export CSV file data
 [2] - Import db data to CSV format
 [3] - Make a database Backup
 [4] - Go back
 [5] - Exit
-'''
+"""
 
-UPDATE_MENU = '''
+UPDATE_MENU = """
 +-------------------------------------------+
 |   [1] - Update price                      |
 |   [2] - Update all                        |
 |   [3] - Go back                           |
 |   [4] - Exit                              |
 +-------------------------------------------+
-'''
+"""
