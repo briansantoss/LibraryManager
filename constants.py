@@ -22,7 +22,7 @@ IMPORT_TESTFILE = IMPORTS_DIR / "test.csv"
 LIBRARY_DB = BASE_DIR / DATA_DIR / "library.db"
 EXPORT_FILEPATH = EXPORTS_DIR / "books.csv"
 
-# Definindo as opções/strings de cada um dos menus
+# Definindo as opções/"strings" de cada um dos menus
 MAIN_MENU = """
 [1] - Library Options
 [2] - Admin Options

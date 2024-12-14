@@ -1,12 +1,13 @@
 import csv
-from db_tools import db_connection, db_backup
-from project_setup import EXPORTS_DIR, EXPORT_FILEPATH, IMPORTS_DIR
+from db_tools import db_connection
+from project_setup import EXPORT_FILEPATH, IMPORTS_DIR
 
 
 @db_connection
 def import_data(cursor, import_filename: str):
     try:
         with open(IMPORTS_DIR / (import_filename + ".csv"), "r", encoding="utf-8") as csvfile:
+            next(csvfile) # Lendo a linha de cabeçalho do arquivo
             file_rows = csv.reader(csvfile)
 
             valid_rows = list(filter(lambda row: len(row) == 4, file_rows))

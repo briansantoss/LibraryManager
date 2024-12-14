@@ -42,15 +42,23 @@ def show_library(cursor):
 
     cursor.execute("SELECT * FROM books")
 
-    query_result = cursor.fetchall()
-    for record in query_result:
+    # Montando um dicionário com os dados das tuplas retornadas usando o nome da coluna como chave
+    result_dict = [{
+        'id': record[0],
+        'title': record[1],
+        'author': record[2],
+        'price': record[3],
+        'pub_year': record[4]
+        } for record in cursor
+    ]
+    for record in result_dict:
         print(f'''
-                Id: {record[0]}
-                Title: {record[1]}
-                Author: {record[2]}
-                Price: {record[3]}
-                Publication Year: {record[4]}
-                ''')
+                Id: {record['id']}
+                Title: {record['title']}
+                Author: {record['author']}
+                Price: {record['price']}
+                Publication Year: {record['pub_year']}
+        ''')
 
 
 @db_connection
@@ -65,7 +73,7 @@ def update_book(cursor):
 
             cursor.execute("SELECT COUNT(*) FROM books WHERE id = ?", (book_id,))
 
-            # Testando se existe algum registro com o id passado via argumento
+            # Testando se existe algum registro com o "id" passado via argumento
             matches_num = cursor.fetchone()[0]
             if matches_num == 0:
                 print(f"\nid: {book_id} invalid, please try again")
@@ -81,7 +89,7 @@ def update_book(cursor):
 
             cursor.execute("SELECT COUNT(*) FROM books WHERE id = ?", (book_id,))
 
-            # Testando se existe algum registro com o id passado via argumento
+            # Testando se existe algum registro com o "id" passado via argumento
             matches_num = cursor.fetchone()[0]
             if matches_num == 0:
                 print(f"\nid: {book_id} invalid, please try again")
@@ -118,28 +126,35 @@ def remove_book(cursor, book_id: int):
 @db_connection
 def filter_book(cursor, author_name: str):
     # Verificando quantos livros têm o autor informado via argumento
-    cursor.execute("SELECT COUNT(*) FROM books WHERE author = ?", (author_name,))
+    cursor.execute("SELECT COUNT(*) FROM books WHERE author = ? COLLATE NOCASE", (author_name,))
 
     matches_num = cursor.fetchone()[0]
     if matches_num == 0:
         print("\nNo book found")
         return
 
-    cursor.execute("SELECT * FROM books WHERE author = ?", (author_name,))
+    cursor.execute("SELECT * FROM books WHERE author = ? COLLATE NOCASE", (author_name,))
 
-    query_result = cursor.fetchall()
-    for record_info in query_result:
+    result_dict = [{
+        'id': record[0],
+        'title': record[1],
+        'author': record[2],
+        'price': record[3],
+        'pub_year': record[4]
+        } for record in cursor.fetchall()
+    ]
+    for record in result_dict:
         print(f'''
-            Id: {record_info[0]}
-            Title: {record_info[1]}
-            Author: {record_info[2]}
-            Price: {record_info[3]}
-            Publication Year: {record_info[4]}
-            ''')
+                Id: {record['id']}
+                Title: {record['title']}
+                Author: {record['author']}
+                Price: {record['price']}
+                Publication Year: {record['pub_year']}
+        ''')
 
 
 def db_backup():
-    # Estabelece 2 conexões, uma com o banco de dados principal e uma de backup
+    # Estabelece 2 conexões, uma com o banco de dados principal e uma de "backup"
     with (sqlite3.connect(LIBRARY_DB) as connection,
           sqlite3.connect(BACKUPS_DIR / f"bk_library_{date.today()}.db") as backup):
         connection.backup(backup)
