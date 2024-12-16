@@ -1,11 +1,28 @@
 import csv
+from constants import IMPORT_SAMPLEFILEPATH, IMPORTS_DIR, EXPORT_FILEPATH
 from db_tools import db_connection
-from project_setup import EXPORT_FILEPATH, IMPORTS_DIR
 
+
+def generate_sample_csv():
+    if not IMPORT_SAMPLEFILEPATH.exists() or IMPORT_SAMPLEFILEPATH.stat().st_size == 0:
+        IMPORT_SAMPLEFILEPATH.touch()
+
+        with open(IMPORT_SAMPLEFILEPATH, "w", encoding="utf-8", newline="") as sample_file:
+            csv.writer(sample_file, delimiter=",").writerows([
+                ("Title", "Author", "Price", "Pub Year"),
+                ("Perigoso! Este livro contém coelhos!", "Tim Warnes", 24.90, 2024),
+                ("Democracia: O Deus que falhou", "Hans-Hermann Hoppe", 86.90, 2014),
+                ("É Assim que Acaba: 1", "Colleen Hoover", 38.94, 2018),
+                ( "Nexus: Uma breve história das redes de informação, "
+                  "da Idade da Pedra à inteligência artificial", "Yuval Noah Harari", 83.56, 2024,),
+                ("A psicologia financeira: lições atemporais sobre fortuna, "
+                 "ganância e felicidade", "Morgan Housel", 34.93, 2021)
+            ])
 
 @db_connection
 def import_data(cursor, import_filename: str):
     try:
+        # Não é necessário adicionar a extensão devido à concatenaçãp com '.csv'
         with open(IMPORTS_DIR / (import_filename + ".csv"), "r", encoding="utf-8") as csvfile:
             next(csvfile) # Lendo a linha de cabeçalho do arquivo
             file_rows = csv.reader(csvfile)
@@ -27,7 +44,7 @@ def import_data(cursor, import_filename: str):
     except FileNotFoundError:
         print(f"\nError: No file named {import_filename} found at exports dir ('{IMPORTS_DIR}')")
     except PermissionError:
-        print(f"Error: Please check the {import_filename} file permissions.")
+        print(f"\nError: Please check the {import_filename} file permissions.")
 
 
 @db_connection

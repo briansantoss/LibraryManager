@@ -16,10 +16,10 @@ NEEDED_DIRS = [
     IMPORTS_DIR
 ]
 
-IMPORT_TESTFILE = IMPORTS_DIR / "test.csv"
+IMPORT_SAMPLEFILEPATH = IMPORTS_DIR / "sample.csv"
 
 # Construindo o caminho completo para o arquivo do banco de dados
-LIBRARY_DB = BASE_DIR / DATA_DIR / "library.db"
+DB_FILEPATH = DATA_DIR / "library.db"
 EXPORT_FILEPATH = EXPORTS_DIR / "books.csv"
 
 # Definindo as opções/"strings" de cada um dos menus

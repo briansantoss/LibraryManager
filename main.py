@@ -72,7 +72,6 @@ while option_main != 3:
                             print("\nNo book(s) to export")
                         else:
                             export_data()
-                        
                     case 2:
                         csvfile = input("\nInsert the import file name: ")
                         import_data(csvfile)
