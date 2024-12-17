@@ -22,7 +22,7 @@ def generate_sample_csv():
 @db_connection
 def import_data(cursor, import_filename: str):
     try:
-        # Não é necessário adicionar a extensão devido à concatenaçãp com '.csv'
+        # Não é necessário adicionar a extensão devido à concatenação com '.csv'
         with open(IMPORTS_DIR / (import_filename + ".csv"), "r", encoding="utf-8") as csvfile:
             next(csvfile) # Lendo a linha de cabeçalho do arquivo
             file_rows = csv.reader(csvfile)
@@ -51,7 +51,7 @@ def import_data(cursor, import_filename: str):
 def export_data(cursor):
     try:
         with open(EXPORT_FILEPATH, "w", newline="", encoding="utf-8") as export_file:
-            # Realiza e captura os registros da tabela correspondentes a pesquisa feita (se houverem)
+            # Realiza e captura as linhas da tabela correspondentes a pesquisa feita (se houverem)
             cursor.execute("SELECT * FROM books")
             query_results = cursor.fetchall()
 

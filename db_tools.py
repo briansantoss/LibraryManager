@@ -1,15 +1,34 @@
 import sqlite3
-from constants import BACKUPS_DIR, LIBRARY_DB
+from constants import BACKUPS_DIR, DB_FILEPATH
 from book import Book
 from datetime import date
 
+# Inicializa o banco de dados, criando o arquivo e a tabela de livros
+def db_init():
+    DB_FILEPATH.touch(exist_ok=True) # Cria o arquivo do banco de dados (se necessário)
+
+    create_table()
 
 # Definindo a função que vai estabelecer a conexão com o banco de dados para toda e qualquer operação nele feita
 def db_connection(function):
     def wrapper(*args, **kwargs):
-        with sqlite3.connect(LIBRARY_DB) as conn:
+        with sqlite3.connect(DB_FILEPATH) as conn:
             return function(conn.cursor(), *args, **kwargs)
     return wrapper
+
+
+@db_connection
+def create_table(cursor):
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS books(
+            id INTEGER PRIMARY KEY,
+            title TEXT NOT NULL,
+            author TEXT NOT NULL,
+            price REAL NOT NULL,   
+            pub_year INTEGER NOT NULL,
+            UNIQUE(title, author, pub_year)
+        )
+    """)
 
 
 @db_connection
@@ -27,38 +46,31 @@ def add_book(cursor, book: Book):
                    (book.title, book.author, book.pub_year, book.price))
     # Testando se o livro já não está presente no banco de dados (duplicata)
     if cursor.rowcount == 0:
-        print("\nEntry error: Unbale to add book. "
+        print("\nEntry error: Unable to add book. "
               "Please check if it is a duplicate or if any required information is missing.")
         return
-    print("\nAdded successfully")
+    print("\nNew book added successfully!")
 
 
 @db_connection
 def show_library(cursor):
-    # Realizando consulta para verificar se existe algum registro atualmente no banco de dados
-    if no_records():
-        print("\nThere are no books to display")
-        return
-
-    cursor.execute("SELECT * FROM books")
-
     # Montando um dicionário com os dados das tuplas retornadas usando o nome da coluna como chave
     result_dict = [{
-        'id': record[0],
-        'title': record[1],
-        'author': record[2],
-        'price': record[3],
-        'pub_year': record[4]
-        } for record in cursor
+        "id": record[0],
+        "title": record[1],
+        "author": record[2],
+        "price": record[3],
+        "pub_year": record[4]
+        } for record in cursor.execute("SELECT * FROM books")
     ]
-    for record in result_dict:
-        print(f'''
-                Id: {record['id']}
-                Title: {record['title']}
-                Author: {record['author']}
-                Price: {record['price']}
-                Publication Year: {record['pub_year']}
-        ''')
+    for book in result_dict:
+        print(f"""
+                Id: {book["id"]}
+                Title: {book["title"]}
+                Author: {book["author"]}
+                Price: {book["price"]}
+                Publication Year: {book["pub_year"]}
+        """)
 
 
 @db_connection
@@ -67,94 +79,118 @@ def update_book(cursor):
     match option:
         case 3:
             return
-
         case 1:
-            book_id = int(input("Insert the id to update the book price: "))
+            while True:
+                try:
+                    book_id = int(input("Insert the id to update the book price: "))
+                    break
+                except ValueError:
+                    print("Oops, books ids must be integers.. Try again!")
+                    book_id = int(input("Insert the id to update the book price: "))
 
-            cursor.execute("SELECT COUNT(*) FROM books WHERE id = ?", (book_id,))
+            while True:
+                try:
+                    new_price = float(input("Insert the new price: "))
+                    break
+                except ValueError:
+                    print("Oops, prices must be numbers.. Try again!")
+                    price = float(input("Insert the new price: "))
 
-            # Testando se existe algum registro com o "id" passado via argumento
-            matches_num = cursor.fetchone()[0]
-            if matches_num == 0:
-                print(f"\nid: {book_id} invalid, please try again")
+            cursor.execute("UPDATE books SET price = ? WHERE id = ?", (new_price, book_id))
+
+            lines_affected = cursor.rowcount
+            if lines_affected == 0:
+                print(f"\nError: No book with {book_id} found, please try again.")
                 return
-
-            price = float(input("Insert the new price: "))
-
-            cursor.execute("UPDATE books SET price = ? WHERE id = ?", (price, book_id))
             print("\nThe price has been updated!")
-
         case 2:
-            book_id = int(input("Enter id to update book data: "))
-
-            cursor.execute("SELECT COUNT(*) FROM books WHERE id = ?", (book_id,))
-
-            # Testando se existe algum registro com o "id" passado via argumento
-            matches_num = cursor.fetchone()[0]
-            if matches_num == 0:
-                print(f"\nid: {book_id} invalid, please try again")
-                return
+            while True:
+                try:
+                    book_id = int(input("Insert the id to update the book data: "))
+                    break
+                except ValueError:
+                    print("Oops, books ids must be integers.. Try again!")
+                    book_id = int(input("Insert the id to update the book data: "))
 
             print("Enter the information below to update your book registration. "
                 "You will be asked for the new name of the book, author, price and year of publication.")
 
-            title = input("Insert the title: ")
-            author = input("Insert the author: ")
-            price = float(input("Insert the price: "))
-            pub_year = int(input("Insert the year of publication: "))
+            new_title = input("Insert the title: ")
+            new_author = input("Insert the author: ")
+            new_price = float(input("Insert the price: "))
+            new_pub_year = int(input("Insert the year of publication: "))
 
             cursor.execute("""UPDATE books SET 
             title = ?,  author = ?, price = ?, pub_year = ?
-            WHERE id = ?""", (title, author, price, pub_year, book_id))
+            WHERE id = ?""", (new_title, new_author, new_price, new_pub_year, book_id))
 
+            lines_affected = cursor.rowcount
+            if lines_affected == 0:
+                print(f"\nError: No book with {book_id} found, please try again.")
+                return
             print(f"\nSuccess, book with id {book_id} information updated successfully!")
         case 4:
             exit(0)
 
 
 @db_connection
-def remove_book(cursor, book_id: int):
+def remove_book(cursor, book_id):
     cursor.execute("DELETE FROM books WHERE id = ?", (book_id,))
 
-    # Verificando se houve de fato alguma remoção através da capuração de linhas afetadas
-    if cursor.rowcount == 0:
-        print("\nBook not found")
+    lines_affected = cursor.rowcount
+    if lines_affected == 0:
+        print(f"\nError: No book with id {book_id} found, please try again.")
         return
-    print(f"\nBook with id {book_id} removed")
+    print(f"\nThe book with id {book_id} information removed successfully!")
 
 
 @db_connection
 def filter_book(cursor, author_name: str):
-    # Verificando quantos livros têm o autor informado via argumento
-    cursor.execute("SELECT COUNT(*) FROM books WHERE author = ? COLLATE NOCASE", (author_name,))
-
-    matches_num = cursor.fetchone()[0]
-    if matches_num == 0:
-        print("\nNo book found")
-        return
-
+    # 'COLLATE NOCASE' ignora se as letras são minúsculas ou maiúsculas
     cursor.execute("SELECT * FROM books WHERE author = ? COLLATE NOCASE", (author_name,))
 
+    matches = cursor.fetchall()
+    if len(matches) == 0:
+        print(f"\nNo book written by {author_name} found")
+        return
+
     result_dict = [{
-        'id': record[0],
-        'title': record[1],
-        'author': record[2],
-        'price': record[3],
-        'pub_year': record[4]
-        } for record in cursor.fetchall()
+        "id": match[0],
+        "title": match[1],
+        "author": match[2],
+        "price": match[3],
+        "pub_year": match[4]
+        } for match in matches
     ]
-    for record in result_dict:
-        print(f'''
-                Id: {record['id']}
-                Title: {record['title']}
-                Author: {record['author']}
-                Price: {record['price']}
-                Publication Year: {record['pub_year']}
-        ''')
+    for book in result_dict:
+        print(f"""
+                Id: {book["id"]}
+                Title: {book["title"]}
+                Author: {book["author"]}
+                Price: {book["price"]}
+                Publication Year: {book["pub_year"]}
+        """)
+
+
+@db_connection
+def db_reset(cursor):
+    if DB_FILEPATH.exists() and DB_FILEPATH.is_file():
+        cursor.execute("DROP TABLE IF EXISTS books")
+        return
+    print(f"\n Verify if you have a database file called {DB_FILEPATH.name} at {DB_FILEPATH}")
 
 
 def db_backup():
     # Estabelece 2 conexões, uma com o banco de dados principal e uma de "backup"
-    with (sqlite3.connect(LIBRARY_DB) as connection,
-          sqlite3.connect(BACKUPS_DIR / f"bk_library_{date.today()}.db") as backup):
-        connection.backup(backup)
+    try:
+        with (sqlite3.connect(DB_FILEPATH) as conn,
+                sqlite3.connect(BACKUPS_DIR / f"bk_library_{date.today()}.db") as backup_conn):
+            conn.backup(backup_conn)
+    except (FileNotFoundError, sqlite3.OperationalError):
+        print("\nMain database or backup database not found. We suggest you to delete the 'needed dirs', "
+                "rerun the program and try again.")
+
+
+@db_connection
+def show_statistics(cursor):
+    pass

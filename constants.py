@@ -42,9 +42,10 @@ LIBRARY_MENU = """
 ADMIN_MENU = """
 [1] - Export CSV file data
 [2] - Import db data to CSV format
-[3] - Make a database Backup
-[4] - Go back
-[5] - Exit
+[3] - Make a database backup
+[4] - Generate database statistics
+[5] - Go back
+[6] - Exit
 """
 
 UPDATE_MENU = """
