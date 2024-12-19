@@ -21,7 +21,7 @@ def db_connection(function):
 def create_table(cursor):
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS books(
-            id INTEGER PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             author TEXT NOT NULL,
             price REAL NOT NULL,   
@@ -174,10 +174,11 @@ def filter_book(cursor, author_name: str):
 
 @db_connection
 def db_reset(cursor):
-    if DB_FILEPATH.exists() and DB_FILEPATH.is_file():
-        cursor.execute("DROP TABLE IF EXISTS books")
-        return
-    print(f"\n Verify if you have a database file called {DB_FILEPATH.name} at {DB_FILEPATH}")
+        try:
+            cursor.execute("DROP TABLE IF EXISTS books")
+            create_table()
+        except sqlite3.OperationalError:
+            print(f"\n Verify if you have a database file called {DB_FILEPATH.name} at {DB_FILEPATH}")
 
 
 def db_backup():

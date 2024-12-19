@@ -43,9 +43,10 @@ ADMIN_MENU = """
 [1] - Export CSV file data
 [2] - Import db data to CSV format
 [3] - Make a database backup
-[4] - Generate database statistics
-[5] - Go back
-[6] - Exit
+[4] - Reset database
+[5] - Generate database statistics
+[6] - Go back
+[7] - Exit
 """
 
 UPDATE_MENU = """
