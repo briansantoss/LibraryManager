@@ -1,6 +1,6 @@
 from constants import MAIN_MENU, LIBRARY_MENU, ADMIN_MENU, UPDATE_MENU
 from db_tools import add_book, db_backup, no_records, show_library, update_book, remove_book, filter_book, \
-    show_statistics, db_reset
+    show_statistics, db_reset, add_genre, remove_genre
 from csv_tools import import_data, export_data
 from book import Book
 
@@ -75,7 +75,7 @@ def library_menu():
 def admin_menu():
     # Declarando variável de opção e atribuindo valor arbitrário para entrar no laço while
     option_admin = 0
-    while option_admin != 6:
+    while option_admin != 9:
         print(ADMIN_MENU)
 
         option_admin = validate_option()
@@ -103,5 +103,13 @@ def admin_menu():
                     print("\nThe database is empty. No data to generate and/or display statistics.")
                 else:
                     show_statistics()
+            case 6:
+                genre_name = input("\nInsert the genre name: ")
+                add_genre(genre_name)
             case 7:
+                genre_id = int(input("\nInsert the id of the book to be removed: "))
+                remove_genre(genre_id)
+            case 8:
+                pass
+            case 10:
                 exit(0)

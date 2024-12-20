@@ -45,8 +45,11 @@ ADMIN_MENU = """
 [3] - Make a database backup
 [4] - Reset database
 [5] - Generate database statistics
-[6] - Go back
-[7] - Exit
+[6] - Add a book genre
+[7] - Remove book genre
+[8] - Modify book genre
+[9] - Go back
+[10 - Exit
 """
 
 UPDATE_MENU = """

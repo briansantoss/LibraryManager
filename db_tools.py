@@ -1,4 +1,6 @@
 import sqlite3
+
+import book
 from constants import BACKUPS_DIR, DB_FILEPATH
 from book import Book
 from datetime import date
@@ -7,7 +9,7 @@ from datetime import date
 def db_init():
     DB_FILEPATH.touch(exist_ok=True) # Cria o arquivo do banco de dados (se necessário)
 
-    create_table()
+    create_tables()
 
 # Definindo a função que vai estabelecer a conexão com o banco de dados para toda e qualquer operação nele feita
 def db_connection(function):
@@ -18,7 +20,7 @@ def db_connection(function):
 
 
 @db_connection
-def create_table(cursor):
+def create_tables(cursor):
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS books(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,6 +29,23 @@ def create_table(cursor):
             price REAL NOT NULL,   
             pub_year INTEGER NOT NULL,
             UNIQUE(title, author, pub_year)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS genres(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name VARCHAR(50) NOT NULL UNIQUE
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS books_genres(
+            book_id INTEGER NOT NULL,
+            genre_id INTEGER NOT NULL,
+            PRIMARY KEY (book_id, genre_id)
+            FOREIGN KEY (book_id) REFERENCES books(id)
+            FOREIGN KEY (genre_id) REFERENCES genres(id)
         )
     """)
 
@@ -175,8 +194,8 @@ def filter_book(cursor, author_name: str):
 @db_connection
 def db_reset(cursor):
         try:
-            cursor.execute("DROP TABLE IF EXISTS books")
-            create_table()
+            for table in ["books", "books_genres", "genres"]:
+                cursor.execute(f"DELETE FROM {table}")
         except sqlite3.OperationalError:
             print(f"\n Verify if you have a database file called {DB_FILEPATH.name} at {DB_FILEPATH}")
 
@@ -195,3 +214,24 @@ def db_backup():
 @db_connection
 def show_statistics(cursor):
     pass
+
+@db_connection
+def add_genre(cursor, genre_name):
+    cursor.execute("INSERT OR IGNORE INTO genres(name) VALUES (?)", (genre_name,))
+
+    if cursor.rowcount == 0:
+        print(f"\nEntry error: Unable to add genre."
+                "Please check if a genre with that name already exists.")
+        return
+    print("\nGenre added successfully!")
+
+
+@db_connection
+def remove_genre(cursor, genre_id):
+    cursor.execute("DELETE FROM genres WHERE id = ?", (genre_id,))
+
+    lines_affected = cursor.rowcount
+    if lines_affected == 0:
+        print(f"\nError: No genre with id {genre_id} found, please try again.")
+        return
+    print(f"\nThe genre with id {genre_id} removed successfully!")
