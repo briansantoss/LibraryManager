@@ -73,22 +73,13 @@ def add_book(cursor, book: Book):
 
 @db_connection
 def show_library(cursor):
-    # Montando um dicionário com os dados das tuplas retornadas usando o nome da coluna como chave
-    result_dict = [{
-        "id": record[0],
-        "title": record[1],
-        "author": record[2],
-        "price": record[3],
-        "pub_year": record[4]
-        } for record in cursor.execute("SELECT * FROM books")
-    ]
-    for book in result_dict:
+    for id, title, author, price, pub_year in cursor.execute("SELECT * FROM books"):
         print(f"""
-                Id: {book["id"]}
-                Title: {book["title"]}
-                Author: {book["author"]}
-                Price: {book["price"]}
-                Publication Year: {book["pub_year"]}
+                Id: {id}
+                Title: {title}
+                Author: {author}
+                Price: {price}
+                Publication Year: {pub_year}
         """)
 
 
@@ -173,21 +164,13 @@ def filter_book(cursor, author_name: str):
         print(f"\nNo book written by {author_name} found")
         return
 
-    result_dict = [{
-        "id": match[0],
-        "title": match[1],
-        "author": match[2],
-        "price": match[3],
-        "pub_year": match[4]
-        } for match in matches
-    ]
-    for book in result_dict:
+    for id, title, author, price, pub_year in matches:
         print(f"""
-                Id: {book["id"]}
-                Title: {book["title"]}
-                Author: {book["author"]}
-                Price: {book["price"]}
-                Publication Year: {book["pub_year"]}
+                Id: {id}
+                Title: {title}
+                Author: {author}
+                Price: {price}
+                Publication Year: {pub_year}
         """)
 
 
