@@ -1,9 +1,9 @@
 import sqlite3
-
 import book
 from constants import BACKUPS_DIR, DB_FILEPATH
 from book import Book
 from datetime import date
+import itertools
 
 # Inicializa o banco de dados, criando o arquivo e a tabela de livros
 def db_init():
@@ -51,13 +51,20 @@ def create_tables(cursor):
 
 
 @db_connection
-def no_records(cursor):
+def has_books(cursor):
     cursor.execute("SELECT COUNT(*) FROM books")
 
     # Obtendo o número de registros no banco de dados
     records_num = cursor.fetchone()[0]
     return True if records_num == 0 else False
 
+@db_connection
+def has_genres(cursor):
+    cursor.execute("SELECT COUNT(*) FROM genres")
+
+    # Obtendo o número de registros no banco de dados
+    records_num = cursor.fetchone()[0]
+    return True if records_num == 0 else False
 
 @db_connection
 def add_book(cursor, book: Book):

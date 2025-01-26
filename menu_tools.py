@@ -1,6 +1,6 @@
 from constants import MAIN_MENU, LIBRARY_MENU, ADMIN_MENU, UPDATE_MENU
-from db_tools import add_book, db_backup, no_records, show_library, update_book, remove_book, filter_book, \
-    show_statistics, db_reset, add_genre, remove_genre
+from db_tools import add_book, db_backup, has_books, show_library, update_book, remove_book, filter_book, \
+    show_statistics, db_reset, add_genre, remove_genre, db_connection, has_genres
 from csv_tools import import_data, export_data
 from book import Book
 
@@ -44,26 +44,26 @@ def library_menu():
                 add_book(Book(title, author, price, pub_year))
                 db_backup()
             case 2:
-                if no_records():
+                if has_books():
                     print("\nNo book(s) to display")
                 else:
                     show_library()
             case 3:
-                if no_records():
+                if has_books():
                     print("\nNo book to modify")
                 else:
                     print(UPDATE_MENU)
                     update_book()
                     db_backup()
             case 4:
-                if no_records():
+                if has_books():
                     print("\nNo book to remove")
                 else:
                     book_id = int(input("\nInsert the id of the book to be removed: "))
                     remove_book(book_id)
                     db_backup()
             case 5:
-                if no_records():
+                if has_books():
                     print("\nNo book to search for")
                 else:
                     author_name = input("\nInsert the author name: ")
@@ -81,7 +81,7 @@ def admin_menu():
         option_admin = validate_option()
         match option_admin:
             case 1:
-                if no_records():
+                if has_books():
                     print("\nNo book(s) to export.")
                 else:
                     export_data()
@@ -89,17 +89,17 @@ def admin_menu():
                 csvfile = input("\nInsert the import file name: ")
                 import_data(csvfile)
             case 3:
-                if no_records():
+                if has_books():
                     print("\nNo book(s) in the system. No need to backup.")
                 else:
                     db_backup()
             case 4:
-                if no_records():
+                if has_books():
                     print("\nNo book(s) in the system. No need to reset.")
                 else:
                     db_reset()
             case 5:
-                if no_records():
+                if has_books():
                     print("\nThe database is empty. No data to generate and/or display statistics.")
                 else:
                     show_statistics()
