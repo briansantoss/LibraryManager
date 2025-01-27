@@ -53,18 +53,23 @@ def create_tables(cursor):
 @db_connection
 def has_books(cursor):
     cursor.execute("SELECT COUNT(*) FROM books")
-
-    # Obtendo o número de registros no banco de dados
-    records_num = cursor.fetchone()[0]
-    return True if records_num == 0 else False
+    return cursor.fetchone()[0] == 0
 
 @db_connection
 def has_genres(cursor):
     cursor.execute("SELECT COUNT(*) FROM genres")
+    return cursor.fetchone()[0] == 0
 
-    # Obtendo o número de registros no banco de dados
-    records_num = cursor.fetchone()[0]
-    return True if records_num == 0 else False
+@db_connection
+def print_genres(cursor):
+    menu_opt = [f"[{num_opt}] - {opt[0]}" for num_opt, opt in enumerate(cursor.execute("SELECT name FROM genres"), start=1)]
+
+    # Obtaining the menu last option number to append the exit option
+    exit_opt_num = len(menu_opt) + 1
+    menu_opt.append(f"[{exit_opt_num}] - Exit")
+    
+    menu_opt = "\n".join(menu_opt)
+    print(menu_opt)
 
 @db_connection
 def add_book(cursor, book: Book):

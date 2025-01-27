@@ -1,6 +1,6 @@
 from constants import MAIN_MENU, LIBRARY_MENU, ADMIN_MENU, UPDATE_MENU
 from db_tools import add_book, db_backup, has_books, show_library, update_book, remove_book, filter_book, \
-    show_statistics, db_reset, add_genre, remove_genre, db_connection, has_genres
+    show_statistics, db_reset, add_genre, remove_genre
 from csv_tools import import_data, export_data
 from book import Book
 
@@ -14,13 +14,13 @@ def validate_option():
 
 def main_menu():
     # Declarando variável de opção e atribuindo valor arbitrário para entrar no laço while
-    option_main = 0
+    main_opt = 0
 
-    while option_main != 3:
+    while main_opt:
         print(MAIN_MENU)
 
-        option_main = validate_option()
-        match option_main:
+        main_opt = validate_option()
+        match main_opt:
             case 1:
                 library_menu()
             case 2:
@@ -29,12 +29,12 @@ def main_menu():
 
 def library_menu():
     # Declarando variável de opção e atribuindo valor arbitrário para entrar no laço while
-    option_library = 0
-    while option_library != 6:
+    lib_opt = 0
+    while lib_opt != 6:
         print(LIBRARY_MENU)
 
-        option_library = validate_option()
-        match option_library:
+        lib_opt = validate_option()
+        match lib_opt:
             case 1:
                 title = input("\nTitle: ")
                 author = input("Author: ")
@@ -74,12 +74,12 @@ def library_menu():
 
 def admin_menu():
     # Declarando variável de opção e atribuindo valor arbitrário para entrar no laço while
-    option_admin = 0
-    while option_admin != 9:
+    adm_opt = 0
+    while adm_opt != 9:
         print(ADMIN_MENU)
 
-        option_admin = validate_option()
-        match option_admin:
+        adm_opt = validate_option()
+        match adm_opt:
             case 1:
                 if has_books():
                     print("\nNo book(s) to export.")
