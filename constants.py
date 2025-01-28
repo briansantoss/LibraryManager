@@ -1,4 +1,3 @@
-from itertools import count
 from pathlib import Path
 
 # Construindo o caminho completo para o diretório base do projeto
@@ -23,38 +22,18 @@ IMPORT_SAMPLEFILEPATH = IMPORTS_DIR / "sample.csv"
 DB_FILEPATH = DATA_DIR / "library.db"
 EXPORT_FILEPATH = EXPORTS_DIR / "books.csv"
 
-opt_ind = count(start=1)
-# Definindo as opções/"strings" de cada um dos menus
-MAIN_MENU = f"""
-[{next(opt_ind)}] - Library Options
-[{next(opt_ind)}] - Admin Options
-[{next(opt_ind)}] - Exit
-"""
-
-opt_ind = count(start=1)
-LIBRARY_MENU = f"""
-[{next(opt_ind)}] - Add a book
-[{next(opt_ind)}] - Display book(s) information(s)
-[{next(opt_ind)}] - Modify book
-[{next(opt_ind)}] - Remove a book
-[{next(opt_ind)}] - Filter book(s) by author
-[{next(opt_ind)}] - Go back
-[{next(opt_ind)}] - Exit
-"""
-
-opt_ind = count(start=1)
 ADMIN_MENU = f"""
-[{next(opt_ind)}] - Export CSV file data
-[{next(opt_ind)}] - Import db data to CSV format
-[{next(opt_ind)}] - Make a database backup
-[{next(opt_ind)}] - Reset database
-[{next(opt_ind)}] - Generate database statistics
-[{next(opt_ind)}] - Add a book genre
-[{next(opt_ind)}] - Remove book genre
-[{next(opt_ind)}] - Modify book genre
-[{next(opt_ind)}] - Display genres
-[{next(opt_ind)}] - Go back
-[{next(opt_ind)}] - Exit
+[] - Export CSV file data
+[] - Import db data to CSV format
+[] - Make a database backup
+[] - Reset database
+[] - Generate database statistics
+[] - Add a book genre
+[] - Remove book genre
+[] - Modify book genre
+[] - Display genres
+[] - Go back
+[] - Exit
 """
 
 UPDATE_MENU = """

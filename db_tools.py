@@ -62,12 +62,12 @@ def has_genres(cursor):
 
 @db_connection
 def print_genres(cursor):
-    menu_opt = [f"[{num_opt}] - {opt[0]}" for num_opt, opt in enumerate(cursor.execute("SELECT name FROM genres"), start=1)]
+    menu_opt = [f"[{opt_num}] - {opt_name}" for opt_num, (opt_name,) in enumerate(cursor.execute("SELECT name FROM genres"), start=1)]
 
     # Obtaining the menu last option number to append the exit option
     exit_opt_num = len(menu_opt) + 1
     menu_opt.append(f"[{exit_opt_num}] - Exit")
-    
+
     menu_opt = "\n".join(menu_opt)
     print(menu_opt)
 

@@ -1,8 +1,19 @@
-from constants import MAIN_MENU, LIBRARY_MENU, ADMIN_MENU, UPDATE_MENU
 from db_tools import add_book, db_backup, has_books, show_library, update_book, remove_book, filter_book, \
     show_statistics, db_reset, add_genre, remove_genre
 from csv_tools import import_data, export_data
 from book import Book
+from enum import IntEnum, auto
+
+
+class LibOpt(IntEnum):
+    ADD_BOOK = auto(),
+    DISPLAY_BOOKS = auto(),
+    MODIFY_BOOK = auto(),
+    REMOVE_BOOK = auto()
+    FILTER_BOOK = auto(),
+    GO_BACK = auto(),
+    EXIT = auto()
+
 
 def validate_option():
     while True:
@@ -11,8 +22,12 @@ def validate_option():
         except ValueError:
             print("\nError: Please enter a integer and valid number.")
 
-
 def main_menu():
+    MAIN_MENU = """
+    [1] - Library options
+    [2] - Admin options
+    [3] - Exit
+    """
     # Declarando variável de opção e atribuindo valor arbitrário para entrar no laço while
     main_opt = 0
 
@@ -28,14 +43,16 @@ def main_menu():
 
 
 def library_menu():
-    # Declarando variável de opção e atribuindo valor arbitrário para entrar no laço while
+    # Declarando variável que armazena a string do menu da biblioteca
+    LIBRARY_MENU = "\n".join([f"[{opt}] - {opt.name.capitalize().replace("_", " ")}" for opt in LibOpt])
+
     lib_opt = 0
-    while lib_opt != 6:
+    while lib_opt != LibOpt.GO_BACK:
         print(LIBRARY_MENU)
 
         lib_opt = validate_option()
         match lib_opt:
-            case 1:
+            case LibOpt.ADD_BOOK:
                 title = input("\nTitle: ")
                 author = input("Author: ")
                 price = float(input("Price: "))
@@ -43,32 +60,32 @@ def library_menu():
 
                 add_book(Book(title, author, price, pub_year))
                 db_backup()
-            case 2:
+            case LibOpt.DISPLAY_BOOKS:
                 if has_books():
                     print("\nNo book(s) to display")
                 else:
                     show_library()
-            case 3:
+            case LibOpt.MODIFY_BOOK:
                 if has_books():
                     print("\nNo book to modify")
                 else:
                     print(UPDATE_MENU)
                     update_book()
                     db_backup()
-            case 4:
+            case LibOpt.REMOVE_BOOK:
                 if has_books():
                     print("\nNo book to remove")
                 else:
                     book_id = int(input("\nInsert the id of the book to be removed: "))
                     remove_book(book_id)
                     db_backup()
-            case 5:
+            case LibOpt.FILTER_BOOK:
                 if has_books():
                     print("\nNo book to search for")
                 else:
                     author_name = input("\nInsert the author name: ")
                     filter_book(author_name)
-            case 7:
+            case LibOpt.EXIT:
                 exit(0)
 
 
