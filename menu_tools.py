@@ -15,6 +15,19 @@ class LibOpt(IntEnum):
     EXIT = auto()
 
 
+class AdmOpt(IntEnum):
+    EXPORT_CSV_FILE_DATA = auto(),
+    IMPORT_TO_CSV_FORMAT = auto(),
+    MAKE_BACKUP = auto(),
+    RESET_DATABASE = auto(),
+    ADD_GENRE = auto(),
+    DISPLAY_GENRE = auto(),
+    MODIFY_GENRE = auto(),
+    REMOVE_GENRE = auto(),
+    GO_BACK = auto(),
+    EXIT = auto()
+
+
 def validate_option():
     while True:
         try:
@@ -90,43 +103,38 @@ def library_menu():
 
 
 def admin_menu():
-    # Declarando variável de opção e atribuindo valor arbitrário para entrar no laço while
+    # Declarando variável que armazena a string do menu de funções administrativas
+    ADMIN_MENU = "\n".join([f"[{opt}] - {opt.name.capitalize().replace("_", " ")}" for opt in AdmOpt])
+
     adm_opt = 0
-    while adm_opt != 9:
+    while adm_opt != AdmOpt.GO_BACK:
         print(ADMIN_MENU)
 
         adm_opt = validate_option()
         match adm_opt:
-            case 1:
+            case AdmOpt.EXPORT_CSV_FILE_DATA:
                 if has_books():
                     print("\nNo book(s) to export.")
                 else:
                     export_data()
-            case 2:
+            case AdmOpt.IMPORT_TO_CSV_FORMAT:
                 csvfile = input("\nInsert the import file name: ")
                 import_data(csvfile)
-            case 3:
+            case AdmOpt.MAKE_BACKUP:
                 if has_books():
                     print("\nNo book(s) in the system. No need to backup.")
                 else:
                     db_backup()
-            case 4:
+            case AdmOpt.RESET_DATABASE:
                 if has_books():
                     print("\nNo book(s) in the system. No need to reset.")
                 else:
                     db_reset()
-            case 5:
-                if has_books():
-                    print("\nThe database is empty. No data to generate and/or display statistics.")
-                else:
-                    show_statistics()
-            case 6:
+            case AdmOpt.ADD_GENRE:
                 genre_name = input("\nInsert the genre name: ")
                 add_genre(genre_name)
-            case 7:
-                genre_id = int(input("\nInsert the id of the book to be removed: "))
+            case AdmOpt.REMOVE_GENRE:
+                genre_id = int(input("\nInsert the id of the genre to be removed: "))
                 remove_genre(genre_id)
-            case 8:
-                pass
-            case 10:
+            case AdmOpt.EXIT:
                 exit(0)

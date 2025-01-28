@@ -22,20 +22,6 @@ IMPORT_SAMPLEFILEPATH = IMPORTS_DIR / "sample.csv"
 DB_FILEPATH = DATA_DIR / "library.db"
 EXPORT_FILEPATH = EXPORTS_DIR / "books.csv"
 
-ADMIN_MENU = f"""
-[] - Export CSV file data
-[] - Import db data to CSV format
-[] - Make a database backup
-[] - Reset database
-[] - Generate database statistics
-[] - Add a book genre
-[] - Remove book genre
-[] - Modify book genre
-[] - Display genres
-[] - Go back
-[] - Exit
-"""
-
 UPDATE_MENU = """
 +-------------------------------------------+
 |   [1] - Update price                      |
