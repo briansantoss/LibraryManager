@@ -1,4 +1,4 @@
-from db_tools import add_book, db_backup, has_books, show_library, update_book, remove_book, filter_book, db_reset, add_genre, remove_genre
+from db_tools import add_book, db_backup, has_books, has_genres, print_genres, show_library, update_book, remove_book, filter_book, db_reset, add_genre, remove_genre
 from csv_tools import import_data, export_data
 from book import Book
 from enum import IntEnum, auto
@@ -42,7 +42,7 @@ def validate_option():
 
 
 def generate_menu(IntEnum):
-    return "\n" + "\n".join([f"[{opt:2}] - {opt.name.replace("_", " ").capitalize()}" for opt in IntEnum]) + "\n"
+    return  f"\n{"\n".join([f"[{opt:2}] - {opt.name.replace("_", " ").capitalize()}" for opt in IntEnum])}\n"
 
 
 def main_menu():
@@ -140,6 +140,11 @@ def admin_menu():
             case AdmOpt.ADD_GENRE:
                 genre_name = input("\nInsert the genre name: ")
                 add_genre(genre_name)
+            case AdmOpt.DISPLAY_GENRES:
+                if has_genres():
+                    print_genres()
+                else:
+                    print(f"\nNo genres in the system.")
             case AdmOpt.REMOVE_GENRE:
                 genre_id = int(input("\nInsert the id of the genre to be removed: "))
                 remove_genre(genre_id)

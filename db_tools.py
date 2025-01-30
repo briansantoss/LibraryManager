@@ -54,25 +54,13 @@ def create_tables(cursor):
 @db_connection
 def has_books(cursor):
     cursor.execute("SELECT COUNT(*) FROM books")
-    return cursor.fetchone()[0] == 0
+    return cursor.fetchone()[0] > 0
 
 
 @db_connection
 def has_genres(cursor):
     cursor.execute("SELECT COUNT(*) FROM genres")
-    return cursor.fetchone()[0] == 0
-
-
-@db_connection
-def print_genres(cursor):
-    # Gerando a string do menu de gêneros
-    genres_menu = [f"[{opt_num:2}] - {genre_name} : {genre_id}" for opt_num, (genre_id, genre_name) in enumerate(cursor.execute("SELECT * FROM genres"), start=1)]
-
-    exit_opt_num = len(genres_menu) + 1
-    genres_menu.append(f"[{exit_opt_num:2}] - Exit")
-
-    genres_menu = f"\n{"\n".join(genres_menu)}\n"
-    print(genres_menu)
+    return cursor.fetchone()[0] > 0
 
 
 @db_connection
@@ -86,10 +74,9 @@ def add_book(cursor, book: Book):
               "Please check if it is a duplicate or if any required information is missing.")
         return
 
-    if has_genres():
-        pass
-        print_genres()
     print("\nNew book added successfully!")
+
+    pass
 
 
 @db_connection
@@ -220,6 +207,15 @@ def show_statistics(cursor):
     pass
 
 @db_connection
+def handle_genres(cursor):
+    genres_data = cursor.execute("SELECT * FROM genres")
+
+    if has_genres():
+        print_genres(genres_data)
+        pass
+
+
+@db_connection
 def add_genre(cursor, genre_name):
     cursor.execute("INSERT OR IGNORE INTO genres(name) VALUES (?)", (genre_name,))
 
@@ -228,6 +224,19 @@ def add_genre(cursor, genre_name):
                 "Please check if a genre with that name already exists.")
         return
     print("\nGenre added successfully!")
+
+
+# TODO: Implementar
+def print_genres():
+    pass
+    # Gerando a string do menu de gêneros
+    # genres_menu = [f"[{opt_num:2}] - {genre_name} : {genre_id}" for opt_num, (genre_id, genre_name) in enumerate(genres_ids, start=1)]
+ 
+    # exit_opt_num = len(genres_menu) + 1
+    # genres_menu.append(f"[{exit_opt_num:2}] - Exit")
+ 
+    # genres_menu = f"\n{"\n".join(genres_menu)}\n"
+    # print(genres_menu)
 
 
 @db_connection
@@ -239,3 +248,4 @@ def remove_genre(cursor, genre_id):
         print(f"\nError: No genre with id {genre_id} found, please try again.")
         return
     print(f"\nThe genre with id {genre_id} removed successfully!")
+
