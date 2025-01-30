@@ -26,7 +26,7 @@ class AdmOpt(IntEnum):
     MAKE_BACKUP = auto(),
     RESET_DATABASE = auto(),
     ADD_GENRE = auto(),
-    DISPLAY_GENRE = auto(),
+    DISPLAY_GENRES = auto(),
     MODIFY_GENRE = auto(),
     REMOVE_GENRE = auto(),
     GO_BACK = auto(),
@@ -42,17 +42,17 @@ def validate_option():
 
 
 def generate_menu(IntEnum):
-    return "\n" + "\n".join([f"[{opt}] - {opt.name.replace("_", " ").capitalize()}" for opt in IntEnum]) + "\n"
+    return "\n" + "\n".join([f"[{opt:2}] - {opt.name.replace("_", " ").capitalize()}" for opt in IntEnum]) + "\n"
 
 
 def main_menu():
     # Declarando variável que armazena a string do menu principal
-    MAIN_MENU = generate_menu(MainOpt)
+    main_menu = generate_menu(MainOpt)
 
     # Declarando variável de opção e atribuindo valor arbitrário para entrar no laço while
     main_opt = 0
     while main_opt != MainOpt.EXIT:
-        print(MAIN_MENU)
+        print(main_menu)
 
         main_opt = validate_option()
         match main_opt:
@@ -64,11 +64,11 @@ def main_menu():
 
 def library_menu():
     # Declarando variável que armazena a string do menu da biblioteca
-    LIBRARY_MENU = generate_menu(LibOpt)
+    lib_menu = generate_menu(LibOpt)
 
     lib_opt = 0
     while lib_opt != LibOpt.GO_BACK:
-        print(LIBRARY_MENU)
+        print(lib_menu)
 
         lib_opt = validate_option()
         match lib_opt:
@@ -111,11 +111,11 @@ def library_menu():
 
 def admin_menu():
     # Declarando variável que armazena a string do menu de funções administrativas
-    ADMIN_MENU = generate_menu(AdmOpt)
+    adm_menu = generate_menu(AdmOpt)
 
     adm_opt = 0
     while adm_opt != AdmOpt.GO_BACK:
-        print(ADMIN_MENU)
+        print(adm_menu)
 
         adm_opt = validate_option()
         match adm_opt:

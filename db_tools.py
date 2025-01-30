@@ -1,3 +1,4 @@
+import enum
 import sqlite3
 import book
 from constants import BACKUPS_DIR, DB_FILEPATH
@@ -55,25 +56,39 @@ def has_books(cursor):
     cursor.execute("SELECT COUNT(*) FROM books")
     return cursor.fetchone()[0] == 0
 
+
 @db_connection
 def has_genres(cursor):
     cursor.execute("SELECT COUNT(*) FROM genres")
     return cursor.fetchone()[0] == 0
 
-# TODO: Implementar
+
 @db_connection
 def print_genres(cursor):
-    pass
+    # Gerando a string do menu de gêneros
+    genres_menu = [f"[{opt_num:2}] - {genre_name} : {genre_id}" for opt_num, (genre_id, genre_name) in enumerate(cursor.execute("SELECT * FROM genres"), start=1)]
+
+    exit_opt_num = len(genres_menu) + 1
+    genres_menu.append(f"[{exit_opt_num:2}] - Exit")
+
+    genres_menu = f"\n{"\n".join(genres_menu)}\n"
+    print(genres_menu)
+
 
 @db_connection
 def add_book(cursor, book: Book):
     cursor.execute("INSERT OR IGNORE INTO books(title, author, pub_year, price) VALUES (?, ?, ?, ?)",
                    (book.title, book.author, book.pub_year, book.price))
+
     # Testando se o livro já não está presente no banco de dados (duplicata)
     if cursor.rowcount == 0:
         print("\nEntry error: Unable to add book. "
               "Please check if it is a duplicate or if any required information is missing.")
         return
+
+    if has_genres():
+        pass
+        print_genres()
     print("\nNew book added successfully!")
 
 
