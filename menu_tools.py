@@ -1,8 +1,13 @@
-from db_tools import add_book, db_backup, has_books, show_library, update_book, remove_book, filter_book, \
-    show_statistics, db_reset, add_genre, remove_genre
+from db_tools import add_book, db_backup, has_books, show_library, update_book, remove_book, filter_book, db_reset, add_genre, remove_genre
 from csv_tools import import_data, export_data
 from book import Book
 from enum import IntEnum, auto
+
+
+class MainOpt(IntEnum):
+    LIBRARY_OPTIONS = auto(),
+    ADMIN_OPTIONS = auto(),
+    EXIT = auto()
 
 
 class LibOpt(IntEnum):
@@ -35,29 +40,31 @@ def validate_option():
         except ValueError:
             print("\nError: Please enter a integer and valid number.")
 
+
+def generate_menu(IntEnum):
+    return "\n" + "\n".join([f"[{opt}] - {opt.name.replace("_", " ").capitalize()}" for opt in IntEnum]) + "\n"
+
+
 def main_menu():
-    MAIN_MENU = """
-    [1] - Library options
-    [2] - Admin options
-    [3] - Exit
-    """
+    # Declarando variável que armazena a string do menu principal
+    MAIN_MENU = generate_menu(MainOpt)
+
     # Declarando variável de opção e atribuindo valor arbitrário para entrar no laço while
     main_opt = 0
-
-    while main_opt:
+    while main_opt != MainOpt.EXIT:
         print(MAIN_MENU)
 
         main_opt = validate_option()
         match main_opt:
-            case 1:
+            case MainOpt.LIBRARY_OPTIONS:
                 library_menu()
-            case 2:
+            case MainOpt.ADMIN_OPTIONS:
                 admin_menu()
 
 
 def library_menu():
     # Declarando variável que armazena a string do menu da biblioteca
-    LIBRARY_MENU = "\n".join([f"[{opt}] - {opt.name.capitalize().replace("_", " ")}" for opt in LibOpt])
+    LIBRARY_MENU = generate_menu(LibOpt)
 
     lib_opt = 0
     while lib_opt != LibOpt.GO_BACK:
@@ -104,7 +111,7 @@ def library_menu():
 
 def admin_menu():
     # Declarando variável que armazena a string do menu de funções administrativas
-    ADMIN_MENU = "\n".join([f"[{opt}] - {opt.name.capitalize().replace("_", " ")}" for opt in AdmOpt])
+    ADMIN_MENU = generate_menu(AdmOpt)
 
     adm_opt = 0
     while adm_opt != AdmOpt.GO_BACK:

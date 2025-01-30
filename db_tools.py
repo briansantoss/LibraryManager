@@ -43,9 +43,9 @@ def create_tables(cursor):
         CREATE TABLE IF NOT EXISTS books_genres(
             book_id INTEGER NOT NULL,
             genre_id INTEGER NOT NULL,
-            PRIMARY KEY (book_id, genre_id)
-            FOREIGN KEY (book_id) REFERENCES books(id)
-            FOREIGN KEY (genre_id) REFERENCES genres(id)
+            PRIMARY KEY (book_id, genre_id),
+            FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+            FOREIGN KEY (genre_id) REFERENCES genres(id) ON DELETE CASCADE
         )
     """)
 
@@ -60,16 +60,10 @@ def has_genres(cursor):
     cursor.execute("SELECT COUNT(*) FROM genres")
     return cursor.fetchone()[0] == 0
 
+# TODO: Implementar
 @db_connection
 def print_genres(cursor):
-    menu_opt = [f"[{opt_num}] - {opt_name}" for opt_num, (opt_name,) in enumerate(cursor.execute("SELECT name FROM genres"), start=1)]
-
-    # Obtaining the menu last option number to append the exit option
-    exit_opt_num = len(menu_opt) + 1
-    menu_opt.append(f"[{exit_opt_num}] - Exit")
-
-    menu_opt = "\n".join(menu_opt)
-    print(menu_opt)
+    pass
 
 @db_connection
 def add_book(cursor, book: Book):
@@ -173,7 +167,7 @@ def filter_book(cursor, author_name: str):
 
     matches = cursor.fetchall()
     if len(matches) == 0:
-        print(f"\nNo book written by {author_name} found")
+        print(f"\nNo book written by {author_name} found.")
         return
 
     for id, title, author, price, pub_year in matches:
@@ -202,10 +196,10 @@ def db_backup():
                 sqlite3.connect(BACKUPS_DIR / f"bk_library_{date.today()}.db") as backup_conn):
             conn.backup(backup_conn)
     except (FileNotFoundError, sqlite3.OperationalError):
-        print("\nMain database or backup database not found. We suggest you to delete the 'needed dirs', "
+        print("\nMain or backup database not found. We suggest you to delete the 'needed dirs', "
                 "rerun the program and try again.")
 
-
+# TODO: Implementar
 @db_connection
 def show_statistics(cursor):
     pass
