@@ -1,22 +1,22 @@
-import enum
 import sqlite3
-import book
 from constants import BACKUPS_DIR, DB_FILEPATH
 from book import Book
 from datetime import date
-import itertools
+
 
 # Inicializa o banco de dados, criando o arquivo e a tabela de livros
 def db_init():
-    DB_FILEPATH.touch(exist_ok=True) # Cria o arquivo do banco de dados (se necessário)
+    DB_FILEPATH.touch(exist_ok=True)  # Cria o arquivo do banco de dados (se necessário)
 
     create_tables()
+
 
 # Definindo a função que vai estabelecer a conexão com o banco de dados para toda e qualquer operação nele feita
 def db_connection(function):
     def wrapper(*args, **kwargs):
         with sqlite3.connect(DB_FILEPATH) as conn:
             return function(conn.cursor(), *args, **kwargs)
+
     return wrapper
 
 
@@ -45,7 +45,7 @@ def create_tables(cursor):
             book_id INTEGER NOT NULL,
             genre_id INTEGER NOT NULL,
             PRIMARY KEY (book_id, genre_id),
-            FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+            FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE,
             FOREIGN KEY (genre_id) REFERENCES genres(id) ON DELETE CASCADE
         )
     """)
@@ -65,13 +65,17 @@ def has_genres(cursor):
 
 @db_connection
 def add_book(cursor, book: Book):
-    cursor.execute("INSERT OR IGNORE INTO books(title, author, pub_year, price) VALUES (?, ?, ?, ?)",
-                   (book.title, book.author, book.pub_year, book.price))
+    cursor.execute(
+        "INSERT OR IGNORE INTO books(title, author, pub_year, price) VALUES (?, ?, ?, ?)",
+        (book.title, book.author, book.pub_year, book.price),
+    )
 
     # Testando se o livro já não está presente no banco de dados (duplicata)
     if cursor.rowcount == 0:
-        print("\nEntry error: Unable to add book. "
-              "Please check if it is a duplicate or if any required information is missing.")
+        print(
+            "\nEntry error: Unable to add book. "
+            "Please check if it is a duplicate or if any required information is missing."
+        )
         return
 
     print("\nNew book added successfully!")
@@ -114,7 +118,9 @@ def update_book(cursor):
                     print("Oops, prices must be numbers.. Try again!")
                     price = float(input("Insert the new price: "))
 
-            cursor.execute("UPDATE books SET price = ? WHERE id = ?", (new_price, book_id))
+            cursor.execute(
+                "UPDATE books SET price = ? WHERE id = ?", (new_price, book_id)
+            )
 
             lines_affected = cursor.rowcount
             if lines_affected == 0:
@@ -130,23 +136,30 @@ def update_book(cursor):
                     print("Oops, books ids must be integers.. Try again!")
                     book_id = int(input("Insert the id to update the book data: "))
 
-            print("Enter the information below to update your book registration. "
-                "You will be asked for the new name of the book, author, price and year of publication.")
+            print(
+                "Enter the information below to update your book registration. "
+                "You will be asked for the new name of the book, author, price and year of publication."
+            )
 
             new_title = input("Insert the title: ")
             new_author = input("Insert the author: ")
             new_price = float(input("Insert the price: "))
             new_pub_year = int(input("Insert the year of publication: "))
 
-            cursor.execute("""UPDATE books SET 
+            cursor.execute(
+                """UPDATE books SET 
             title = ?,  author = ?, price = ?, pub_year = ?
-            WHERE id = ?""", (new_title, new_author, new_price, new_pub_year, book_id))
+            WHERE id = ?""",
+                (new_title, new_author, new_price, new_pub_year, book_id),
+            )
 
             lines_affected = cursor.rowcount
             if lines_affected == 0:
                 print(f"\nError: No book with {book_id} found, please try again.")
                 return
-            print(f"\nSuccess, book with id {book_id} information updated successfully!")
+            print(
+                f"\nSuccess, book with id {book_id} information updated successfully!"
+            )
         case 4:
             exit(0)
 
@@ -165,7 +178,9 @@ def remove_book(cursor, book_id):
 @db_connection
 def filter_book(cursor, author_name: str):
     # 'COLLATE NOCASE' ignora se as letras são minúsculas ou maiúsculas
-    cursor.execute("SELECT * FROM books WHERE author = ? COLLATE NOCASE", (author_name,))
+    cursor.execute(
+        "SELECT * FROM books WHERE author = ? COLLATE NOCASE", (author_name,)
+    )
 
     matches = cursor.fetchall()
     if len(matches) == 0:
@@ -184,27 +199,37 @@ def filter_book(cursor, author_name: str):
 
 @db_connection
 def db_reset(cursor):
-        try:
-            for table in ["books", "books_genres", "genres"]:
-                cursor.execute(f"DELETE FROM {table}")
-        except sqlite3.OperationalError:
-            print(f"\n Verify if you have a database file called {DB_FILEPATH.name} at {DB_FILEPATH}")
+    try:
+        for table in ["books", "books_genres", "genres"]:
+            cursor.execute(f"DELETE FROM {table}")
+    except sqlite3.OperationalError:
+        print(
+            f"\n Verify if you have a database file called {DB_FILEPATH.name} at {DB_FILEPATH}"
+        )
 
 
 def db_backup():
     # Estabelece 2 conexões, uma com o banco de dados principal e uma de "backup"
     try:
-        with (sqlite3.connect(DB_FILEPATH) as conn,
-                sqlite3.connect(BACKUPS_DIR / f"bk_library_{date.today()}.db") as backup_conn):
+        with (
+            sqlite3.connect(DB_FILEPATH) as conn,
+            sqlite3.connect(
+                BACKUPS_DIR / f"bk_library_{date.today()}.db"
+            ) as backup_conn,
+        ):
             conn.backup(backup_conn)
     except (FileNotFoundError, sqlite3.OperationalError):
-        print("\nMain or backup database not found. We suggest you to delete the 'needed dirs', "
-                "rerun the program and try again.")
+        print(
+            "\nMain or backup database not found. We suggest you to delete the 'needed dirs', "
+            "rerun the program and try again."
+        )
+
 
 # TODO: Implementar
 @db_connection
 def show_statistics(cursor):
     pass
+
 
 @db_connection
 def handle_genres(cursor):
@@ -220,8 +245,10 @@ def add_genre(cursor, genre_name):
     cursor.execute("INSERT OR IGNORE INTO genres(name) VALUES (?)", (genre_name,))
 
     if cursor.rowcount == 0:
-        print(f"\nEntry error: Unable to add genre."
-                "Please check if a genre with that name already exists.")
+        print(
+            f"\nEntry error: Unable to add genre."
+            "Please check if a genre with that name already exists."
+        )
         return
     print("\nGenre added successfully!")
 
@@ -231,10 +258,10 @@ def print_genres():
     pass
     # Gerando a string do menu de gêneros
     # genres_menu = [f"[{opt_num:2}] - {genre_name} : {genre_id}" for opt_num, (genre_id, genre_name) in enumerate(genres_ids, start=1)]
- 
+
     # exit_opt_num = len(genres_menu) + 1
     # genres_menu.append(f"[{exit_opt_num:2}] - Exit")
- 
+
     # genres_menu = f"\n{"\n".join(genres_menu)}\n"
     # print(genres_menu)
 
@@ -248,4 +275,3 @@ def remove_genre(cursor, genre_id):
         print(f"\nError: No genre with id {genre_id} found, please try again.")
         return
     print(f"\nThe genre with id {genre_id} removed successfully!")
-
